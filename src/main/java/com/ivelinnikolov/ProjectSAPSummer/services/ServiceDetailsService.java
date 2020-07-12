@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,9 +24,21 @@ public class ServiceDetailsService
     @Autowired
     private UserService userService;
 
-    public boolean serviceIsActive(int clientId, int serviceId)
+    public boolean serviceExists(int clientId, int serviceId)
     {
-        ServiceDetails details = getDetailsById(serviceId);
+        ServiceDetails details = new ServiceDetails();
+
+        //find the one that matches having both the client Id and service Id (there will be ONLY one such form)
+        List<ServiceDetails> all = serviceDetailsRepository.findAll();
+        for(ServiceDetails single : all)
+        {
+            if (single.getUserId() == clientId && single.getServiceId() == serviceId)
+            {
+                details = single;
+                break;
+            }
+        }
+
         if(details.getUserId() == clientId)
         {
             return true;
@@ -33,11 +46,21 @@ public class ServiceDetailsService
         return false;
     }
 
-    public ServiceDetails
+    public List<ServiceDetails> listActiveServicesForUser(int clientId)
+    {
+        List<ServiceDetails> valid = new ArrayList<>();
+        List<ServiceDetails> all = serviceDetailsRepository.findAll();
+        for(ServiceDetails single : all)
+        {
+            if (single.getUserId() != 0) valid.add(single);
+        }
+        return valid;  //This way we'll return all users with active service that are still available.
+
+    }
 
     public String addServiceToUser(int clientId, int serviceId)
     {
-        if(!serviceIsActive(clientId, serviceId))
+        if(!serviceExists(clientId, serviceId))
         {
             return "Service already active for this user!";
         }
@@ -65,20 +88,5 @@ public class ServiceDetailsService
     public List<ServiceDetails> listAll()
     {
         return serviceDetailsRepository.findAll();
-    }
-
-    public ServiceDetails getDetailsById(int id)
-    {
-        return serviceDetailsRepository.findById(id).orElseGet(() -> {
-            try
-            {
-                throw new NoSuchDetailsException();
-            }
-            catch (NoSuchDetailsException e)
-            {
-                e.getMessage();
-                return null;
-            }
-        });
     }
 }
