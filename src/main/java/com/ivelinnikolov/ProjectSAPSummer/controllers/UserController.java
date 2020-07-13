@@ -1,6 +1,6 @@
 package com.ivelinnikolov.ProjectSAPSummer.controllers;
 
-import com.ivelinnikolov.ProjectSAPSummer.pojo_models.LoginForm;
+import com.ivelinnikolov.ProjectSAPSummer.body_request_models.LoginForm;
 import com.ivelinnikolov.ProjectSAPSummer.models.User;
 import com.ivelinnikolov.ProjectSAPSummer.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,9 +1,9 @@
-package com.ivelinnikolov.ProjectSAPSummer.pojo_models;
+package com.ivelinnikolov.ProjectSAPSummer.body_request_models;
 
 public class LoginForm
 {
-    String username;
-    String password;
+    private String username;
+    private String password;
 
     public String getUsername()
     {

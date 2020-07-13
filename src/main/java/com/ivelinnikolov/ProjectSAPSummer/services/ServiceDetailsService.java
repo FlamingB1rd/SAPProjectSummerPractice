@@ -24,38 +24,49 @@ public class ServiceDetailsService
     @Autowired
     private UserService userService;
 
+
+    public List<ServiceDetails> searchByClientId(int clientId)
+    {
+        List<ServiceDetails> all = serviceDetailsRepository.findAll();
+        List<ServiceDetails> valid = new ArrayList<>();
+        for(ServiceDetails single : all)
+        {
+            if (single.getUserId() == clientId)
+            {
+                valid.add(single);
+            }
+        }
+
+        return valid;
+    }
+
+    public List<ServiceDetails> searchByServiceId(int serviceId)
+    {
+        List<ServiceDetails> all = serviceDetailsRepository.findAll();
+        List<ServiceDetails> valid = new ArrayList<>();
+        for(ServiceDetails single : all)
+        {
+            if (single.getServiceId() == serviceId)
+            {
+                valid.add(single);
+            }
+        }
+
+        return valid;
+    }
+
     public boolean serviceExists(int clientId, int serviceId)
     {
-        ServiceDetails details = new ServiceDetails();
-
         //find the one that matches having both the client Id and service Id (there will be ONLY one such form)
         List<ServiceDetails> all = serviceDetailsRepository.findAll();
         for(ServiceDetails single : all)
         {
             if (single.getUserId() == clientId && single.getServiceId() == serviceId)
             {
-                details = single;
-                break;
+                return true;
             }
         }
-
-        if(details.getUserId() == clientId)
-        {
-            return true;
-        }
         return false;
-    }
-
-    public List<ServiceDetails> listActiveServicesForUser(int clientId)
-    {
-        List<ServiceDetails> valid = new ArrayList<>();
-        List<ServiceDetails> all = serviceDetailsRepository.findAll();
-        for(ServiceDetails single : all)
-        {
-            if (single.getUserId() != 0) valid.add(single);
-        }
-        return valid;  //This way we'll return all users with active service that are still available.
-
     }
 
     public String addServiceToUser(int clientId, int serviceId)
