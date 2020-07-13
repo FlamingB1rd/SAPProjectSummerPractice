@@ -26,7 +26,7 @@ public class ServiceDetailsController
         {
             return ResponseEntity.status(401).body("Unauthorized!");
         }
-        else if (!session.getAttribute("userRole").equals(2)) // 2 - employee
+        else if (!session.getAttribute("userRole").equals("operator"))
         {
             return ResponseEntity.status(403).body("Request unavailable for this account.");
         }
