@@ -1,6 +1,5 @@
 package com.ivelinnikolov.ProjectSAPSummer.services;
 
-import com.ivelinnikolov.ProjectSAPSummer.exceptions.NoSuchDetailsException;
 import com.ivelinnikolov.ProjectSAPSummer.models.OfferedServices;
 import com.ivelinnikolov.ProjectSAPSummer.models.ServiceDetails;
 import com.ivelinnikolov.ProjectSAPSummer.models.User;
@@ -8,7 +7,7 @@ import com.ivelinnikolov.ProjectSAPSummer.repository.ServiceDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +23,40 @@ public class ServiceDetailsService
     @Autowired
     private UserService userService;
 
+    //for operators
+    public List<ServiceDetails> listUnpaidClients()
+    {
+        List<ServiceDetails> all = serviceDetailsRepository.findAll();
+        List<ServiceDetails> valid = new ArrayList<>();
+        for(ServiceDetails single : all)
+        {
+            LocalDate endDate = LocalDate.parse(single.getPaymentDue());
+            LocalDate currentDay = LocalDate.now();
+            if (single.getPaymentAmount() > 0 && currentDay.isAfter(endDate))
+            {
+                valid.add(single);
+            }
+        }
+
+        return valid;
+    }
+
+    //for clients
+    public List<ServiceDetails> listClintData(int clientId)
+    {
+        List<ServiceDetails> all = searchByClientId(clientId);
+        List<ServiceDetails> valid = new ArrayList<>();
+        for(ServiceDetails single : all)
+        {
+            LocalDate endDate = LocalDate.parse(single.getPaymentDue());
+            LocalDate currentDay = LocalDate.now();
+            if (single.getPaymentAmount() > 0 && !currentDay.isAfter(endDate))
+            {
+                valid.add(single);
+            }
+        }
+        return valid;
+    }
 
     public List<ServiceDetails> searchByClientId(int clientId)
     {
@@ -46,10 +79,12 @@ public class ServiceDetailsService
         List<ServiceDetails> valid = new ArrayList<>();
         for(ServiceDetails single : all)
         {
+            System.out.println(all);
             if (single.getServiceId() == serviceId)
             {
                 valid.add(single);
             }
+            System.out.println(valid);
         }
 
         return valid;
@@ -78,19 +113,18 @@ public class ServiceDetailsService
 
         OfferedServices service = offeredServicesService.getServiceById(serviceId);
         User client = userService.getAccountById(clientId);
+        LocalDate currentDate = LocalDate.now();
 
         ServiceDetails details = new ServiceDetails();
 
         details.setUserId(client.getId());
         details.setServiceId(service.getId());
         details.setPaymentAmount(service.getPaymentPerMonth());
-        //details.setPaymentDue(); todo: replace placeholder
-        //details.setPaymentStatus(); todo: replace placeholder
+        details.setPaymentDue(currentDate.plusMonths(1).toString());
+        details.setPaymentStatus("Unpaid");
         details.setAvailableMinutes(service.getOfferedMinutes());
         details.setAvailableNumberOfMessages(service.getOfferedNumberOfMessages());
         details.setAvailableMbs(service.getOfferedMbs());
-
-        //todo: add exceptions
 
         serviceDetailsRepository.save(details);
         return "Service added to user successfully!";

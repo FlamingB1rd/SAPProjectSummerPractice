@@ -18,6 +18,38 @@ public class ServiceDetailsController
     ServiceDetailsService serviceDetailsService;
 
     //-------------------------------------------- GET REQUESTS --------------------------------------------
+    @GetMapping("/unpaid-details")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> listUnpaidClients(HttpSession session)
+    {
+        if (session.getAttribute("userId") == null)
+        {
+            return ResponseEntity.status(401).body("Unauthorized!");
+        }
+        else if (!session.getAttribute("userRole").equals("operator"))
+        {
+            return ResponseEntity.status(403).body("Request unavailable for this account.");
+        }
+
+        return  ResponseEntity.ok(serviceDetailsService.listUnpaidClients());
+    }
+
+    @GetMapping("/client-details")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> listClientPaymentDetails(HttpSession session)
+    {
+        if (session.getAttribute("userId") == null)
+        {
+            return ResponseEntity.status(401).body("Unauthorized!");
+        }
+        else if (!session.getAttribute("userRole").equals("customer"))
+        {
+            return ResponseEntity.status(403).body("Request unavailable for this account.");
+        }
+
+        return  ResponseEntity.ok(serviceDetailsService.listClintData((int)session.getAttribute("userId")));
+    }
+
     @GetMapping("/list-by-service/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> getDetailsByService(@PathVariable(name = "id") int id, HttpSession session)
@@ -30,7 +62,6 @@ public class ServiceDetailsController
         {
             return ResponseEntity.status(403).body("Request unavailable for this account.");
         }
-
         return  ResponseEntity.ok(serviceDetailsService.searchByServiceId(id));
     }
 
@@ -38,8 +69,15 @@ public class ServiceDetailsController
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> getDetailsByClient(@PathVariable(name = "id") int id, HttpSession session)
     {
-        //може да използваме този request и за Операторите и за Клиентите да си видяд актривните услуги и
-        //оставащи минути, Мbs и смс-и.
+        if (session.getAttribute("userId") == null)
+        {
+            return ResponseEntity.status(401).body("Unauthorized!");
+        }
+        else if (!session.getAttribute("userRole").equals("operator"))
+        {
+            return ResponseEntity.status(403).body("Request unavailable for this account.");
+        }
+
         return  ResponseEntity.ok(serviceDetailsService.searchByClientId(id));
     }
 

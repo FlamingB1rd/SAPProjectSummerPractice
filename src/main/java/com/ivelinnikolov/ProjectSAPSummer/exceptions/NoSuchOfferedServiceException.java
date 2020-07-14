@@ -1,6 +1,6 @@
 package com.ivelinnikolov.ProjectSAPSummer.exceptions;
 
-public class NoSuchOfferedServiceException extends Exception
+public class NoSuchOfferedServiceException extends RuntimeException
 {
     @Override
     public String getMessage()

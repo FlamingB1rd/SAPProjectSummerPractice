@@ -20,7 +20,7 @@ public class UserController
 
     //-------------------------------------------- GET REQUESTS --------------------------------------------
 
-    @GetMapping("/list")
+    @GetMapping("/users")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> getAllAccounts(HttpSession session)
     {
@@ -36,11 +36,18 @@ public class UserController
         return ResponseEntity.ok(userService.listAll());
     }
 
-    @GetMapping("/individual/{id}")
+    @GetMapping("/user/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> getAccount(@PathVariable(name = "id") int id, HttpSession session)
     {
-
+        if (session.getAttribute("userId") == null)
+        {
+            return ResponseEntity.status(401).body("Unauthorized!");
+        }
+        else if (!session.getAttribute("userRole").equals("operator"))
+        {
+            return ResponseEntity.status(403).body("Request unavailable for this account.");
+        }
         return  ResponseEntity.ok(userService.getAccountById(id));
     }
 
@@ -54,7 +61,7 @@ public class UserController
     }
 
     //The operator can add users himself:
-    @PostMapping("/add")
+    @PostMapping("/add-user")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> createProduct(@Valid @RequestBody User user, HttpSession session)
     {

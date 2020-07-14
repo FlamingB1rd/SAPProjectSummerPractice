@@ -1,6 +1,5 @@
 package com.ivelinnikolov.ProjectSAPSummer.controllers;
 
-import com.ivelinnikolov.ProjectSAPSummer.models.OfferedServices;
 import com.ivelinnikolov.ProjectSAPSummer.services.OfferedServicesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

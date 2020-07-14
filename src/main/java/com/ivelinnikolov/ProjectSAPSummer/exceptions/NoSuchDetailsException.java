@@ -1,6 +1,6 @@
 package com.ivelinnikolov.ProjectSAPSummer.exceptions;
 
-public class NoSuchDetailsException extends Exception
+public class NoSuchDetailsException extends RuntimeException
 {
     @Override
     public String getMessage()

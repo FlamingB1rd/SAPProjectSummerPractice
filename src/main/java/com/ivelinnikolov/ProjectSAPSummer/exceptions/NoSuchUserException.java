@@ -1,6 +1,6 @@
 package com.ivelinnikolov.ProjectSAPSummer.exceptions;
 
-public class NoSuchUserException extends Exception
+public class NoSuchUserException extends RuntimeException
 {
     @Override
     public String getMessage()

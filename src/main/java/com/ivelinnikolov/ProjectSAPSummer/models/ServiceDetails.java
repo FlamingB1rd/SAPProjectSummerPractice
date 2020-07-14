@@ -1,7 +1,6 @@
 package com.ivelinnikolov.ProjectSAPSummer.models;
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.util.Objects;
 
 @Entity
@@ -12,7 +11,7 @@ public class ServiceDetails
     private int userId;
     private int serviceId;
     private double paymentAmount;
-    private Date paymentDue;
+    private String paymentDue;
     private String paymentStatus;
     private int availableMinutes;
     private int availableNumberOfMessages;
@@ -56,12 +55,12 @@ public class ServiceDetails
 
     @Basic
     @Column(name = "payment_due")
-    public Date getPaymentDue()
+    public String getPaymentDue()
     {
         return paymentDue;
     }
 
-    public void setPaymentDue(Date paymentDue)
+    public void setPaymentDue(String paymentDue)
     {
         this.paymentDue = paymentDue;
     }
