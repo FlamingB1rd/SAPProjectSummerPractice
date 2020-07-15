@@ -79,12 +79,10 @@ public class ServiceDetailsService
         List<ServiceDetails> valid = new ArrayList<>();
         for(ServiceDetails single : all)
         {
-            System.out.println(all);
             if (single.getServiceId() == serviceId)
             {
                 valid.add(single);
             }
-            System.out.println(valid);
         }
 
         return valid;
@@ -104,6 +102,23 @@ public class ServiceDetailsService
         return false;
     }
 
+/*
+    public String checkActivity()
+    {
+        List<ServiceDetails> all = serviceDetailsRepository.findAll();
+        for(ServiceDetails single : all)
+        {
+            LocalDate endDate = LocalDate.parse(single.getPaymentDue());
+            LocalDate currentDay = LocalDate.now();
+            if((single.getAvailableMbs() == 0 && single.getAvailableMinutes() == 0 && single.getAvailableNumberOfMessages() == 0) || currentDay.isAfter(endDate))
+            {
+                single.setStatus("Inactive");
+            }
+        }
+        return "All statuses have been updated for the day.";
+    }
+*/
+
     public String addServiceToUser(int clientId, int serviceId)
     {
         if(!serviceExists(clientId, serviceId))
@@ -121,7 +136,7 @@ public class ServiceDetailsService
         details.setServiceId(service.getId());
         details.setPaymentAmount(service.getPaymentPerMonth());
         details.setPaymentDue(currentDate.plusMonths(1).toString());
-        details.setPaymentStatus("Unpaid");
+        details.setStatus("Unpaid");
         details.setAvailableMinutes(service.getOfferedMinutes());
         details.setAvailableNumberOfMessages(service.getOfferedNumberOfMessages());
         details.setAvailableMbs(service.getOfferedMbs());

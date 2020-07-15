@@ -1,7 +1,12 @@
 package com.ivelinnikolov.ProjectSAPSummer.models;
 
+import com.ivelinnikolov.ProjectSAPSummer.exceptions.InvalidAccountTypeException;
+import com.ivelinnikolov.ProjectSAPSummer.exceptions.InvalidEmailException;
+
 import javax.persistence.*;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Entity
 @Table(name = "user", schema = "mobile_services")
@@ -14,6 +19,8 @@ public class User
     private String password;
     private String email;
     private String accountType;
+
+    private static final String PATTERN = "^[_A-Za-z0-9-+]+(.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(.[A-Za-z0-9]+)*(.[A-Za-z]{2,})$";
 
     @Id
     @Column(name = "id")
@@ -84,6 +91,12 @@ public class User
 
     public void setEmail(String email)
     {
+        Pattern pattern = Pattern.compile(PATTERN);
+        Matcher matcher = pattern.matcher(email);
+        if(!matcher.matches())
+        {
+            throw new InvalidEmailException();
+        }
         this.email = email;
     }
 
@@ -96,6 +109,11 @@ public class User
 
     public void setAccountType(String accountType)
     {
+        if (accountType.equalsIgnoreCase("operator") || accountType.equalsIgnoreCase("cleint"))
+        {
+            this.accountType = accountType;
+        }
+        else throw new InvalidAccountTypeException();
         this.accountType = accountType;
     }
 

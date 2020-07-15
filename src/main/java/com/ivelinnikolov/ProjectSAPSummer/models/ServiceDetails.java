@@ -12,7 +12,7 @@ public class ServiceDetails
     private int serviceId;
     private double paymentAmount;
     private String paymentDue;
-    private String paymentStatus;
+    private String status;
     private int availableMinutes;
     private int availableNumberOfMessages;
     private int availableMbs;
@@ -66,15 +66,15 @@ public class ServiceDetails
     }
 
     @Basic
-    @Column(name = "payment_status")
-    public String getPaymentStatus()
+    @Column(name = "status")
+    public String getStatus()
     {
-        return paymentStatus;
+        return status;
     }
 
-    public void setPaymentStatus(String paymentStatus)
+    public void setStatus(String paymentStatus)
     {
-        this.paymentStatus = paymentStatus;
+        this.status = paymentStatus;
     }
 
     @Basic
@@ -126,12 +126,12 @@ public class ServiceDetails
                 availableNumberOfMessages == that.availableNumberOfMessages &&
                 availableMbs == that.availableMbs &&
                 Objects.equals(paymentDue, that.paymentDue) &&
-                Objects.equals(paymentStatus, that.paymentStatus);
+                Objects.equals(status, that.status);
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(userId, serviceId, paymentAmount, paymentDue, paymentStatus, availableMinutes, availableNumberOfMessages, availableMbs);
+        return Objects.hash(userId, serviceId, paymentAmount, paymentDue, status, availableMinutes, availableNumberOfMessages, availableMbs);
     }
 }
