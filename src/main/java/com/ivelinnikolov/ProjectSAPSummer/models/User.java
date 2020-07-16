@@ -22,6 +22,19 @@ public class User
 
     private static final String PATTERN = "^[_A-Za-z0-9-+]+(.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(.[A-Za-z0-9]+)*(.[A-Za-z]{2,})$";
 
+    public User() {}
+
+    public User(User user)
+    {
+        this.id = user.getId();
+        this.fname = user.getFname();
+        this.lname = user.getLname();
+        this.username = user.getUsername();
+        this.password = user.getPassword();
+        this.email = user.getEmail();
+        this.accountType = user.getAccountType();
+    }
+
     @Id
     @Column(name = "id")
     public int getId()
@@ -91,12 +104,12 @@ public class User
 
     public void setEmail(String email)
     {
-        Pattern pattern = Pattern.compile(PATTERN);
+        /*Pattern pattern = Pattern.compile(PATTERN);
         Matcher matcher = pattern.matcher(email);
         if(!matcher.matches())
         {
             throw new InvalidEmailException();
-        }
+        }*/
         this.email = email;
     }
 
@@ -109,11 +122,11 @@ public class User
 
     public void setAccountType(String accountType)
     {
-        if (accountType.equalsIgnoreCase("operator") || accountType.equalsIgnoreCase("cleint"))
+        /*if (accountType.equalsIgnoreCase("OPERATOR") || accountType.equalsIgnoreCase("CLIENT"))
         {
             this.accountType = accountType;
         }
-        else throw new InvalidAccountTypeException();
+        else throw new InvalidAccountTypeException();*/
         this.accountType = accountType;
     }
 

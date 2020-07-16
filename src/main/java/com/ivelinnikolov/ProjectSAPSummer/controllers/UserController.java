@@ -1,14 +1,13 @@
 package com.ivelinnikolov.ProjectSAPSummer.controllers;
 
-import com.ivelinnikolov.ProjectSAPSummer.body_request_models.LoginForm;
 import com.ivelinnikolov.ProjectSAPSummer.models.User;
 import com.ivelinnikolov.ProjectSAPSummer.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @RestController
@@ -20,34 +19,18 @@ public class UserController
 
     //-------------------------------------------- GET REQUESTS --------------------------------------------
 
-    @GetMapping("/users")
+    @PreAuthorize("hasAnyRole('OPERATOR')")
+    @GetMapping("/")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<?> getAllAccounts(HttpSession session)
+    public ResponseEntity<?> getAllAccounts()
     {
-        if (session.getAttribute("userId") == null)
-        {
-            return ResponseEntity.status(401).body("Unauthorized!");
-        }
-        else if (!session.getAttribute("userRole").equals("operator"))
-        {
-            return ResponseEntity.status(403).body("Request unavailable for this account.");
-        }
-
         return ResponseEntity.ok(userService.listAll());
     }
 
-    @GetMapping("/user/{id}")
+    @GetMapping("/user{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<?> getAccount(@PathVariable(name = "id") int id, HttpSession session)
+    public ResponseEntity<?> getAccount(@PathVariable(name = "id") int id)
     {
-        if (session.getAttribute("userId") == null)
-        {
-            return ResponseEntity.status(401).body("Unauthorized!");
-        }
-        else if (!session.getAttribute("userRole").equals("operator"))
-        {
-            return ResponseEntity.status(403).body("Request unavailable for this account.");
-        }
         return  ResponseEntity.ok(userService.getAccountById(id));
     }
 
@@ -61,23 +44,15 @@ public class UserController
     }
 
     //The operator can add users himself:
-    @PostMapping("/add-user")
+    @PreAuthorize("hasAnyRole('OPERATOR')")
+    @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> createProduct(@Valid @RequestBody User user, HttpSession session)
+    public ResponseEntity<?> createProduct(@Valid @RequestBody User user)
     {
-        if (session.getAttribute("userId") == null)
-        {
-            return ResponseEntity.status(401).body("Unauthorized!");
-        }
-        else if (!session.getAttribute("userRole").equals("operator"))
-        {
-            return ResponseEntity.status(403).body("Request unavailable for this account.");
-        }
-
         return ResponseEntity.ok(userService.createNewAccount(user));
     }
 
-    @PostMapping("/login")
+    /*@PostMapping("/login")
     public ResponseEntity<?> logIn(@RequestBody LoginForm loginForm, HttpSession session)
     {
         User userValidate = new User();
@@ -92,5 +67,5 @@ public class UserController
         session.invalidate();
 
         return ResponseEntity.ok("Logged out successfully!");
-    }
+    }*/
 }

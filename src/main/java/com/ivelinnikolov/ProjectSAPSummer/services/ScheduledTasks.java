@@ -20,7 +20,7 @@ public class ScheduledTasks {
 
     // "[Seconds] [Minutes] [Hours] [Day of month] [Month] [Day of week] [Year]"
     // for testing use: 0/20 * * * * ? - Every 20 seconds
-    @Scheduled(cron = "0/20 * * * * ?") //12PM Всеки ден
+    @Scheduled(cron = "0 0 12 * * ?") //12PM Всеки ден
     public void checkActivity()
     {
         List<ServiceDetails> all = serviceDetailsRepository.findAll();
@@ -35,5 +35,8 @@ public class ScheduledTasks {
             }
         }
         log.info("All statuses have been updated for the day.");
+
     }
+
+
 }

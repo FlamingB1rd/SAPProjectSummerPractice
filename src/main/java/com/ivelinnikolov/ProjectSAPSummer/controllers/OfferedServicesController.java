@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/services")
 public class OfferedServicesController
@@ -20,7 +18,7 @@ public class OfferedServicesController
 
     //-------------------------------------------- GET REQUESTS --------------------------------------------
 
-    @GetMapping("/list")
+    @GetMapping("/")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> getAllProducts()
     {

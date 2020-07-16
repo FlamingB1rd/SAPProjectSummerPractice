@@ -4,10 +4,10 @@ import com.ivelinnikolov.ProjectSAPSummer.exceptions.NoSuchUserException;
 import com.ivelinnikolov.ProjectSAPSummer.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.ivelinnikolov.ProjectSAPSummer.models.User;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Service
@@ -16,12 +16,15 @@ public class UserService
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public List<User> listAll()
     {
         return userRepository.findAll();
     }
 
-    public ResponseEntity<?> logIn(User user, HttpSession session)
+    /*public ResponseEntity<?> logIn(User user, HttpSession session)
     {
         User validateUser = userRepository.findByUsername(user.getUsername());
 
@@ -34,10 +37,11 @@ public class UserService
         session.setAttribute("userRole", validateUser.getAccountType());
 
         return ResponseEntity.ok("User " + validateUser.getUsername() + " successfully logged in as " + validateUser.getAccountType());
-    }
+    }*/
 
     public User createNewAccount(User user)
     {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 

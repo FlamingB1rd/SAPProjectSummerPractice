@@ -12,4 +12,5 @@ public class ProjectSapSummerApplication
 	{
 		SpringApplication.run(ProjectSapSummerApplication.class, args);
 	}
+
 }
